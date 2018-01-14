@@ -19,11 +19,11 @@ reddit = praw.Reddit(client_id=auth['client_id'], client_secret=auth['client_sec
                      username=auth['username'])
 reddit.read_only = True
 sub = reddit.subreddit('relationships')
-stats_to_grab = ['author', 'created', 'downs', 'edited', 'id', 'locked', 'name', 'permalink', 'score', 'selftext',
+stats_to_grab = ['author', 'created', 'downs', 'edited', 'id', 'locked', 'name', 'num_comments', 'permalink', 'score', 'selftext',
                  'title', 'ups']
 
 end = datetime(2018, 1, 13)
-start = datetime(2014, 1, 1)
+start = datetime(2008, 7, 10)
 
 for time_delta in range((end - start).days):
     daily_submissions = []
