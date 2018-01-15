@@ -1,7 +1,7 @@
 reddit_prediction
 ==============================
-
-Gathering Reddit data and predicting user engagement
+The purpose of this project is to show efficient gathering and storage of subreddit data, 
+and then to predict the number of comments and score based on a hypothetical submission.
 
 Project Organization
 ------------
