@@ -1,23 +1,22 @@
 import json
 import logging
 import os
-from collections import defaultdict
 from datetime import datetime, date
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from make_database import RelationshipsSubmissions
+from make_database import RelationshipsSubmissions, create_tables
 
-logging.basicConfig(filename='make_database.log', level=logging.INFO)
+logging.basicConfig(filename='populate_database.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 project_dir = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
 database_path = os.path.join(project_dir, 'data', 'interim', 'relationships_fix.sqlite')
 
 submissions_data_dir = os.path.join(project_dir, 'data', 'raw')
-d = defaultdict(int)
+d = {}
 
 
 def create_session(db_path):
@@ -46,7 +45,7 @@ def str_to_dt(s: str):
     :param s:
     :return:
     """
-    return datetime.fromtimestamp(int(s))
+    return datetime.fromtimestamp(int(s.replace('.0', '')))
 
 
 def format_submission(sub):
@@ -57,11 +56,12 @@ def format_submission(sub):
     :return:
     """
     # There seems to be some redundancies somehow, not sure why, but this skips redundant info and logs a warning
-    if not d[(sub['id'], sub['created'])]:
-        d[(sub['id'], sub['created'])] = 1
+    if d.get((sub['id'], sub['created']), False):
         logger.warning(f'Redundant Submission: {sub}')
-    else:
         return None
+    else:
+        d[(sub['id'], sub['created'])] = 1
+
     sub.pop('selftext', None)
 
     # The edits have a format of 3 options: False, True, or timestamp
@@ -88,6 +88,8 @@ stats_typed = {
 
 if __name__ == '__main__':
 
+    if not os.path.isfile(database_path):
+        create_tables(database_path)
     session = create_session(database_path)
 
     for file in os.listdir(submissions_data_dir):
@@ -97,8 +99,8 @@ if __name__ == '__main__':
         # This gives us good handling if we want to work on a subset of files based on date
         filename = file.replace('.json', '')
         file_date = date(*[int(x) for x in filename.split('_')])
-        if file_date < date(2016, 3, 5):
-            continue
+        # if file_date < date(2016, 3, 5):
+        #     continue
 
         with open(os.path.join(submissions_data_dir, file), 'r') as json_file:
             submission_list = json.load(json_file)
@@ -117,4 +119,4 @@ if __name__ == '__main__':
         # Commit a days worth for efficiency
         session.commit()
 
-        logger.info(f'Date: {filename}\tCount: {sub_count}')
+        logger.info(f'Time: {datetime.now().time()}\tFile: {filename}\tCount: {sub_count}')
