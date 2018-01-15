@@ -13,7 +13,7 @@ logging.basicConfig(filename='populate_database.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 project_dir = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
-database_path = os.path.join(project_dir, 'data', 'interim', 'relationships_fix.sqlite')
+database_path = os.path.join(project_dir, 'data', 'interim', 'relationships.sqlite')
 
 submissions_data_dir = os.path.join(project_dir, 'data', 'raw')
 d = {}

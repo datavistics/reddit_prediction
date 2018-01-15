@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 
 project_dir = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
-database_path = os.path.join(project_dir, 'data', 'interim', 'relationships_fix.sqlite')
+database_path = os.path.join(project_dir, 'data', 'interim', 'relationships.sqlite')
 base = declarative_base()
 
 
