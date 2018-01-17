@@ -1,2 +1,4 @@
 sqlalchemy
 praw
+pandas
+matplotlib
