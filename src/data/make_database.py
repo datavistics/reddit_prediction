@@ -1,11 +1,11 @@
-import os
+from pathlib import Path
 
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 
-project_dir = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
-database_path = os.path.join(project_dir, 'data', 'interim', 'relationships.sqlite')
+project_dir = Path(__file__).parents[1]
+database_path = project_dir/'data'/'interim'/'relationships.sqlite'
 base = declarative_base()
 
 
@@ -33,7 +33,7 @@ class RelationshipsSubmissions(base):
 def create_tables(db_path):
     # Create an engine that stores data in the local directory's
     # sqlalchemy_example.db file.
-    engine = create_engine('sqlite:///' + db_path)
+    engine = create_engine('sqlite:///' + str(db_path))
 
     # Create all tables in the engine. This is equivalent to "Create Table"
     # statements in raw SQL.

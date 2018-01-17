@@ -1,7 +1,7 @@
 import json
 import logging
-import os
 from datetime import datetime, date
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -12,10 +12,10 @@ from make_database import RelationshipsSubmissions, create_tables
 logging.basicConfig(filename='populate_database.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-project_dir = os.path.join(os.path.dirname(__file__), os.pardir, os.pardir)
-database_path = os.path.join(project_dir, 'data', 'interim', 'relationships.sqlite')
+project_dir = Path(__file__).parents[1]
+database_path = project_dir/'data'/'interim'/'relationships.sqlite'
+submissions_data_dir = project_dir/'data'/'raw'
 
-submissions_data_dir = os.path.join(project_dir, 'data', 'raw')
 d = {}
 
 
@@ -88,21 +88,20 @@ stats_typed = {
 
 if __name__ == '__main__':
 
-    if not os.path.isfile(database_path):
+    if not database_path.is_file():
         create_tables(database_path)
     session = create_session(database_path)
 
-    for file in os.listdir(submissions_data_dir):
+    for file in submissions_data_dir.iterdir():
         if not file.endswith(".json"):
             continue
 
         # This gives us good handling if we want to work on a subset of files based on date
-        filename = file.replace('.json', '')
-        file_date = date(*[int(x) for x in filename.split('_')])
-        # if file_date < date(2016, 3, 5):
-        #     continue
+        file_date = date(*[int(x) for x in str(file.stem).split('_')])
+        if file_date < date(2017, 12, 31):
+            continue
 
-        with open(os.path.join(submissions_data_dir, file), 'r') as json_file:
+        with open(file, 'r') as json_file:
             submission_list = json.load(json_file)
 
         # Daily Count for logging
@@ -119,4 +118,4 @@ if __name__ == '__main__':
         # Commit a days worth for efficiency
         session.commit()
 
-        logger.info(f'Time: {datetime.now().time()}\tFile: {filename}\tCount: {sub_count}')
+        logger.info(f'Time: {datetime.now().time()}\tFile: {file.stem}\tCount: {sub_count}')
