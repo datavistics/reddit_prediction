@@ -2,3 +2,5 @@ sqlalchemy
 praw
 pandas
 matplotlib
+graphviz
+pydot
