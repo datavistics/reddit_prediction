@@ -28,12 +28,10 @@ df['edited_delta'] = (df.edited_date - df.index)
 df['edited_delta_min'] = df.edited_delta.dt.seconds/60
 df['edited_delta_hour'] = df.edited_delta_min/60
 df['edited_delta_day'] = df.edited_delta.dt.days
-
-df = df[df.edited_delta_day > 100]
+df = df[df.edited_delta_day < 100]
 
 # feather.write_dataframe(df, str(dataframe_out_path))
 # Feather doesnt currently support datetime... ugh.
 df.to_pickle(dataframe_out_path.with_suffix('.pickle'))
 print(f'Writing dataframe to file{str(dataframe_out_path.with_suffix(".pickle"))}')
-
 
