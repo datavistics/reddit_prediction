@@ -1,6 +1,8 @@
+tensorflow
 sqlalchemy
 praw
 pandas
 matplotlib
 graphviz
 pydot
+keras
