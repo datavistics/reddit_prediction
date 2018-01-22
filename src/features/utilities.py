@@ -1,4 +1,3 @@
-import pickle
 from pathlib import Path
 
 import numpy as np
@@ -13,11 +12,11 @@ def get_embeddings(embeddings_path: Path):
 
     embedding_vectors = {}
 
-    p_path = embeddings_path.with_suffix('.pickle')
-    if p_path.exists():
-        with open(p_path, 'rb') as f:
-            embedding_vectors = pickle.load(f)
-        return embedding_vectors
+    # p_path = embeddings_path.with_suffix('.pickle')
+    # if p_path.exists():
+    #     with open(p_path, 'rb') as f:
+    #         embedding_vectors = pickle.load(f)
+    #     return embedding_vectors
 
     with open(embeddings_path, 'r', encoding='utf-8') as f:
         for line in f:
@@ -26,8 +25,8 @@ def get_embeddings(embeddings_path: Path):
             word = line_split[0]
             embedding_vectors[word] = vec
 
-    with open(p_path, 'wb') as f:
-        pickle.dump(embedding_vectors, p_path)
+    # with open(p_path, 'wb') as f:
+    #     pickle.dump(embedding_vectors, f)
 
     return embedding_vectors
 
